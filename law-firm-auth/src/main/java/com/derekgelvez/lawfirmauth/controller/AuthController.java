@@ -3,9 +3,7 @@ package com.derekgelvez.lawfirmauth.controller;
 import com.derekgelvez.lawfirmauth.model.Users;
 import com.derekgelvez.lawfirmauth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthController {
@@ -17,4 +15,5 @@ public class AuthController {
     public Users register(@RequestBody Users user){
         return service.register(user);
     }
+
 }
