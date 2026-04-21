@@ -3,5 +3,6 @@ package com.derekgelvez.lawfirmauth.model;
 public enum Role {
     CLIENT,
     ATTORNEY,
-    CLERK
+    CLERK,
+    SUPER_ADMIN
 }
