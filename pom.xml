@@ -81,6 +81,16 @@
                 <artifactId>law-firm-common</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>com.derekgelvez</groupId>
+                <artifactId>law-firm-auth</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.derekgelvez</groupId>
+                <artifactId>law-firm-client</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -97,6 +107,7 @@
         <module>law-firm-common</module>
         <module>law-firm-auth</module>
         <module>law-firm-web</module>
+        <module>law-firm-client</module>
     </modules>
 
     <build>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -61,8 +62,9 @@ public class InvitationService {
         invitation.setEmail(request.getEmail());
         invitation.setRole(request.getRole());
         invitation.setCreatedBy(createdByEmail);
-        invitation.setToken(UUID.randomUUID().toString());
-        invitation.setExpiresAt(LocalDateTime.now().plusHours(48));
+        int code = new Random().nextInt(900000) + 100000;
+        invitation.setToken(String.valueOf(code));
+        invitation.setExpiresAt(LocalDateTime.now().plusMinutes(30));
         invitation.setUsed(false);
 
         return invitationRepository.save(invitation);

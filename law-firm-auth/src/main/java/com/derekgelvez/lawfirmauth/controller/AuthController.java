@@ -1,5 +1,6 @@
 package com.derekgelvez.lawfirmauth.controller;
 
+import com.derekgelvez.lawfirmauth.dto.ChangePasswordRequest;
 import com.derekgelvez.lawfirmauth.dto.CreateInviteRequest;
 import com.derekgelvez.lawfirmauth.dto.InviteRegisterRequest;
 import com.derekgelvez.lawfirmauth.dto.LoginRequest;
@@ -10,6 +11,7 @@ import com.derekgelvez.lawfirmauth.service.InvitationService;
 import com.derekgelvez.lawfirmcommon.dto.ApiResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,5 +44,17 @@ public class AuthController {
 
 
         return ApiResponseDTO.success("Invitation created successfully", invitation.getToken());
+    }
+
+    @PutMapping("/change-password")
+    public ApiResponseDTO<String> changePassword(
+            @RequestBody ChangePasswordRequest request) {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        authService.changePassword(request, email);
+        return ApiResponseDTO.success("Password changed successfully", null);
     }
 }
