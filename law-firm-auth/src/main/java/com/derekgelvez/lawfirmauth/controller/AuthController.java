@@ -29,7 +29,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApiResponseDTO<String> register(@RequestBody InviteRegisterRequest request) {
+    public ApiResponseDTO<String> register(
+            @RequestBody InviteRegisterRequest request) {
         authService.registerWithInvite(request);
         return ApiResponseDTO.success("Registration successful", null);
     }

@@ -4,12 +4,15 @@ import com.derekgelvez.lawfirmauth.dto.ChangePasswordRequest;
 import com.derekgelvez.lawfirmauth.dto.InviteRegisterRequest;
 import com.derekgelvez.lawfirmauth.dto.LoginRequest;
 import com.derekgelvez.lawfirmauth.model.Invitation;
+import com.derekgelvez.lawfirmauth.model.Role;
 import com.derekgelvez.lawfirmauth.model.Users;
 import com.derekgelvez.lawfirmauth.repository.UserRepository;
 import com.derekgelvez.lawfirmauth.security.JwtUtil;
+import com.derekgelvez.lawfirmcommon.event.ClientRegisteredEvent;
 import com.derekgelvez.lawfirmcommon.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +26,7 @@ public class AuthService {
 
     private final UserRepository repo;
     private final JwtUtil jwtUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     @Lazy
@@ -54,7 +58,8 @@ public class AuthService {
     }
 
     public Users registerWithInvite(InviteRegisterRequest request) {
-        Invitation invitation = invitationService.validateAndConsumeInvite(request.getInviteToken());
+        Invitation invitation = invitationService
+                .validateAndConsumeInvite(request.getInviteToken());
 
         Users user = new Users();
         user.setFirstName(request.getFirstName());
@@ -63,7 +68,14 @@ public class AuthService {
         user.setRole(invitation.getRole());
         user.setPassword(encoder.encode(request.getPassword()));
 
-        return repo.save(user);
+        Users savedUser = repo.save(user);
+
+        if (savedUser.getRole() == Role.CLIENT) {
+            eventPublisher.publishEvent(
+                    new ClientRegisteredEvent(savedUser.getId()));
+        }
+
+        return savedUser;
     }
 
     public void changePassword(ChangePasswordRequest request, String email) {
@@ -92,4 +104,6 @@ public class AuthService {
         user.setPassword(encoder.encode(request.getNewPassword()));
         repo.save(user);
     }
+
+
 }
